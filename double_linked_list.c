@@ -10,7 +10,7 @@ typedef struct node
 
 int insert(nodetype **l, nodetype **r, int element, int pos)
 {
-    nodetype *iter=*l;
+    nodetype *iter;
     nodetype *temp=(nodetype*) malloc (sizeof(nodetype));
     temp->info=element;
     if(pos==1)
@@ -33,6 +33,7 @@ int insert(nodetype **l, nodetype **r, int element, int pos)
     }
     else
     {
+        iter=*l;
         pos--;
         while(--pos && iter!=NULL)
         {
@@ -106,6 +107,7 @@ int search(nodetype *l, int element)
     {
         if(l->info==element)
             return index;
+        l=l->next;
         index++;
     }
     return -1; //returns -1 in case of the element not found
@@ -135,11 +137,11 @@ void delete_all(nodetype **l)
 int main()
 {
     nodetype *l=NULL, *r=NULL;
-    int ch, pos, element;
+    int ch, pos, element, ind;
     char ch2;
     while(1)
     {
-        printf("Enter:\n1 to insert an element \n2 to delete an element\n3 to display the list\nEnter choice: ");
+        printf("Enter:\n1 to insert an element \n2 to delete an element\n3 to display the list\n4 to search an element\nEnter choice: ");
         scanf("%d", &ch);
         switch(ch)
         {
@@ -158,6 +160,14 @@ int main()
         case 3:
             display(l);
             break;
+        case 4:
+            printf("Enter element: ");
+            scanf("%d", &element);
+            ind=search(l,element);
+            if(ind==-1)
+                printf("Element not found!\n");
+            else
+                printf("Element found at index %d\n", ind);
         }
         printf("Do you want to continue? Y/N: ");
         scanf("\n%c", &ch2);

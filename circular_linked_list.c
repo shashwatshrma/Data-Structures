@@ -9,7 +9,7 @@ typedef struct node
 
 int insert(nodetype **l, nodetype **r, int element, int pos)
 {
-    nodetype *iter=*l;
+    nodetype *iter;
     nodetype *temp=(nodetype*) malloc (sizeof(nodetype));
     temp->info=element;
     if(pos==1)
@@ -18,6 +18,7 @@ int insert(nodetype **l, nodetype **r, int element, int pos)
         *l=temp;
         if(*r==NULL)
             *r=*l;
+        (*r)->next=*l;
     }
     else if(pos==-1)
     {
@@ -26,20 +27,23 @@ int insert(nodetype **l, nodetype **r, int element, int pos)
         else
             (*r)->next=temp;
         *r=temp;
-        (*r)->next=NULL;
+        (*r)->next=*l;
     }
     else
     {
+        iter=*l;
         pos--;
-        while(--pos && iter!=NULL)
-        {
-            iter=iter->next;
-        }
         if(iter==NULL)
             return -1;
+        while(--pos)
+        {
+            iter=iter->next;
+            if(iter==*l)
+                return -1;
+        }
         temp->next=iter->next;
         iter->next=temp;
-        if(temp->next==NULL)
+        if(temp->next==*l)
             *r=temp;
     }
     return 0;
@@ -47,45 +51,59 @@ int insert(nodetype **l, nodetype **r, int element, int pos)
 
 int delete(nodetype **l, nodetype **r, int pos)
 {
-    nodetype *iter=*l;
+    nodetype *iter;
     nodetype *temp;
     if(*l==NULL)
         return -1;
     if(pos==1)
     {
         temp=*l;
-        *l=(*l)->next;
-    }
-    else if(pos==-1)
-    {
-        if(iter->next==NULL)
+        if((*l)->next!=*l)
         {
-            temp=iter;
-            *l=NULL;
-            *r=NULL;
+            *l=(*l)->next;
+            (*r)->next=*l;
         }
         else
         {
-            while(iter->next->next!=NULL)
+            *l=NULL;
+            *r=NULL;
+        }
+    }
+    else if(pos==-1)
+    {
+        iter=*l;
+        if((*l)->next!=*l)
+        {
+            while(iter->next->next!=*l)
             {
                 iter=iter->next;
             }
             temp=iter->next;
-            iter->next==NULL;
+            iter->next=*l;
             *r=iter;
+        }
+        else
+        {
+            *l=NULL;
+            *r=NULL;
         }
     }
     else
     {
+        iter=*l;
         pos--;
-        while(--pos && iter!=NULL)
-        {
-            iter=iter->next;
-        }
         if(iter==NULL)
             return -1;
+        while(--pos)
+        {
+            iter=iter->next;
+            if(iter==*l)
+                return -1;
+        }
         temp=iter->next;
         iter->next=iter->next->next;
+        if(iter->next==*l)
+            *r=iter;
     }
     free(temp);
     return 0;
@@ -94,36 +112,47 @@ int delete(nodetype **l, nodetype **r, int pos)
 int search(nodetype *l, int element)
 {
     int index=0;
-    while(l!=NULL)
+    nodetype *iter=l;
+    if(iter!=NULL)
     {
-        if(l->info==element)
-            return index;
-        l=l->next;
-        index++;
+        do
+        {
+            if(iter->info==element)
+                return index;
+            index++;
+            iter=iter->next;
+        }while(iter!=l);
     }
     return -1; //returns -1 in case of the element not found
 }
 
 void display(nodetype *l)
 {
-    while(l!=NULL)
+    nodetype *iter=l;
+    if(l==NULL)
+        return;
+    do
     {
-        printf("%d ", l->info);
-        l=l->next;
-    }
+        printf("%d ", iter->info);
+        iter=iter->next;
+    }while(iter!=l);
     printf("\n");
 }
 
-void delete_all(nodetype **l)
+void delete_all(nodetype **l, nodetype **r)
 {
-    nodetype *temp;
+    if(*l==NULL)
+        return;
+    nodetype *t;
+    (*r)->next=NULL;
     while(*l!=NULL)
     {
-        temp=*l;
+        t=*l;
         *l=(*l)->next;
-        free(temp);
+        free(t);
     }
 }
+
 
 int main()
 {
@@ -165,6 +194,6 @@ int main()
         if(ch2=='n'||ch2=='N')
             break;
     }
-    delete_all(&l);
+    delete_all(&l, &r);
     return 0;
 }
