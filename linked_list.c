@@ -39,6 +39,8 @@ int insert(nodetype **l, nodetype **r, int element, int pos)
             return -1;
         temp->next=iter->next;
         iter->next=temp;
+        if(temp->next==NULL)
+            *r=temp;
     }
     return 0;
 }
