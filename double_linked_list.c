@@ -41,9 +41,12 @@ int insert(nodetype **l, nodetype **r, int element, int pos)
         if(iter==NULL)
             return -1;
         temp->next=iter->next;
-        temp->next->prev=temp;
+        if(temp->next!=NULL)
+            temp->next->prev=temp;
         iter->next=temp;
         temp->prev=iter;
+        if(temp->next==NULL)
+            *r=temp;
     }
     return 0;
 }
