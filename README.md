@@ -26,9 +26,9 @@ The following programs are included in this project:
 - stack_using_queue.c
 	+ This program implements the functionalities of a stack using the queue data structure
 	+ Push operation is handled by simply enqueuing the element in the queue
-	+ Pop operation calls the function recursively until we reach the rear and dequeues the element at rear, thus achieving a LIFO data structure i.r a stack
+	+ Pop operation dequeues and enqueues the element size-1 times such that the last inserted element is at the front and then that element is dequeued and returned.
 	
--  stack_using_queue.c
+-  queue_using_stack.c
 	+ This program implements the functionalities of a queue using the stack data structure
 	+ Enqueue operation is handled by pushing the elements in a stack
 	+ When dequeuing the elements, since the first element in is at the bottom of the stack, we first move all the elements of the stack into another stack and pop the element at the top of the second element (which is the first element entered by the user). We store this popped element and move all the elements back to the first stack to maintain the order of the elements. Thus, we achieve a FIFO data structure using the stack data structure i.e a stack.
