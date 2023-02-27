@@ -7,6 +7,17 @@ typedef struct node
     struct node *next;
 } nodetype;
 
+int size(nodetype* f)
+{
+    int si=0;
+    while(f!=NULL)
+    {
+        si++;
+        f=f->next;
+    }
+    return si;
+}
+
 void enqueue(nodetype **f, int element)
 {
     nodetype *t=(nodetype*) malloc (sizeof(nodetype)), *iter;
@@ -39,13 +50,12 @@ void push(nodetype **f, int element)
 
 int pop(nodetype **f)
 {
+    int i=size(*f)-1;
     int element;
-    if((*f)->next==NULL)
-    {
-        element=(*f)->info;
-        return dequeue(f);
-    }
-    return pop(&(*f)->next);
+    while(i--)
+        enqueue(f,dequeue(f));
+    element=dequeue(f);
+    return element;
 }
 
 void display(nodetype *top)
